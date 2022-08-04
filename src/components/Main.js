@@ -62,6 +62,7 @@ function Main (props) {
               link={itinialCards.link}
               likes={itinialCards.likes.length}
               onCardClick={props.onCardClick}
+              key={itinialCards._id}
             />
           )
         })}
