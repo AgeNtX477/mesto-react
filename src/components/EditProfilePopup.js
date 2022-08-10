@@ -28,7 +28,7 @@ function EditProfilePopup (props) {
   useEffect(() => {
     setName(currentUser.name)
     setDescription(currentUser.about)
-  }, [currentUser])
+  }, [props.isOpen, currentUser])
 
   return (
     <PopupWithForm
