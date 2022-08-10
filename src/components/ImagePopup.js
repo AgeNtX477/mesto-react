@@ -7,7 +7,11 @@ function ImagePopup (props) {
     >
       <div className='popup__zoom-container'>
         <figure className='popup__figure'>
-          <img src={props.card.link} className='popup__image' alt={props.card.name} />
+          <img
+            src={props.card.link}
+            className='popup__image'
+            alt={props.card.name}
+          />
           <figcaption className='popup__caption'>{props.card.name}</figcaption>
         </figure>
         <button
@@ -21,6 +25,4 @@ function ImagePopup (props) {
   )
 }
 
-export default ImagePopup;
-
-
+export default ImagePopup

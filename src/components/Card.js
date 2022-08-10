@@ -1,9 +1,50 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
 function Card (props) {
+  // подпишемся на контект пользователя
+  const currentUser = useContext(CurrentUserContext)
+
+  // проверим пользовательская ли карточка?
+  const isOwn = props.card.owner._id === currentUser._id
+
+  // проверим поставил ли пользователь карточке лайк
+  const isLiked = props.card.likes.some(i => i._id === currentUser._id)
+
+  // уберем иконку удаления на карточке, которую добавил не currentuser
+  const cardDeleteButtonClassName = `element__del-button_visible ${
+    !isOwn ? 'element__del-button_hidden' : ''
+  }`
+
+  // добавим активную иконку лайк, если пользователь поставил лайк на карточке
+  const cardLikeButtonClassName = `element__like-button ${
+    isLiked ? 'element__like-button_type_active' : ''
+  }`
+
+  // обработчик клика по карточе
   function handleClick () {
     props.onCardClick(props.card)
   }
+
+  // обработчик клика по кнопке лайк
+  function handleLikeClick () {
+    props.onCardLike(props.card)
+  }
+
+  // обработчик по кнопке удалить
+  function handleDeleteClick () {
+    props.onCardDelete(props.card)
+  }
+
+  /*  function propsLikes () {
+    const likeCounter = document.querySelector('.element__like-counter')
+    if (props.likes === 0) {
+      likeCounter.style.display = 'none'
+    } else {
+      likeCounter.style.display = 'inline'
+    }
+  } */
+
   return (
     <article className='element__box'>
       <img
@@ -15,11 +56,19 @@ function Card (props) {
       <div className='element__stuff'>
         <h2 className='element__title'>{props.name}</h2>
         <div className='element__like-container'>
-          <button className='element__like-button' type='button' />
+          <button
+            onClick={handleLikeClick}
+            className={cardLikeButtonClassName}
+            type='button'
+          />
           <span className='element__like-counter'>{props.likes}</span>
         </div>
       </div>
-      <button className='element__del-button_visible' type='button' />
+      <button
+        onClick={handleDeleteClick}
+        className={cardDeleteButtonClassName}
+        type='button'
+      />
     </article>
   )
 }

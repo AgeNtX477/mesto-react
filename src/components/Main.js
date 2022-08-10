@@ -1,32 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import api from '../utils/Api'
+import React, { useContext } from 'react'
 import Card from './Card'
+import { CurrentUserContext } from '../contexts/CurrentUserContext'
 
 // стейт-переменные для загрузки данных с сервера, данные пользователя + карточки
 function Main (props) {
-  const [userName, setUserName] = useState('')
-  const [userDescription, setUserDescription] = useState('')
-  const [userAvatar, setUserAvatar] = useState('')
-  const [cards, setCards] = useState([])
-
-// обращаясь к классу api загружаем одноверменно все данные с сервера
-  useEffect(() => {
-    Promise.all([api.getProfile(), api.getInitialCards()])
-      .then(([data, cardList]) => {
-        setUserAvatar(data.avatar)
-        setUserName(data.name)
-        setUserDescription(data.about)
-        setCards(cardList)
-      })
-      .catch(err => console.log(err))
-  }, [])
+  const currentUser = useContext(CurrentUserContext)
 
   return (
     <main>
       <section className='profile'>
         <div className='profile__user-container'>
           <img
-            src={userAvatar}
+            src={currentUser.avatar}
             className='profile__avatar'
             alt='Аватар пользователя'
           />
@@ -38,14 +23,14 @@ function Main (props) {
         </div>
         <div className='profile__info'>
           <div className='profile__container'>
-            <h1 className='profile__author'>{userName}</h1>
+            <h1 className='profile__author'>{currentUser.name}</h1>
             <button
               onClick={props.onEditProfile}
               className='profile__edit-button'
               type='button'
             />
           </div>
-          <h2 className='profile__description'>{userDescription}</h2>
+          <h2 className='profile__description'>{currentUser.about}</h2>
         </div>
         <button
           onClick={props.onAddPlace}
@@ -54,15 +39,17 @@ function Main (props) {
         />
       </section>
       <section className='element'>
-        {cards.map(itinialCards => {
+        {props.cards.map(itinialCards => {
           return (
             <Card
+              key={itinialCards._id}
               card={itinialCards}
               name={itinialCards.name}
               link={itinialCards.link}
               likes={itinialCards.likes.length}
               onCardClick={props.onCardClick}
-              key={itinialCards._id}
+              onCardLike={props.onCardLike}
+              onCardDelete={props.onCardDelete}
             />
           )
         })}
